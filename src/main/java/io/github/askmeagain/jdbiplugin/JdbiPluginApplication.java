@@ -1,11 +1,14 @@
 package io.github.askmeagain.jdbiplugin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.askmeagain.jdbiplugin.entity.ChildEntity;
 import io.github.askmeagain.jdbiplugin.entity.SampleEntity;
 import io.github.askmeagain.jdbiplugin.repository.SampleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.reflect.BeanMapper;
+import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.jdbi.v3.jackson2.Jackson2Config;
 import org.jdbi.v3.jackson2.Jackson2Plugin;
 import org.jdbi.v3.json.JsonPlugin;
