@@ -18,6 +18,12 @@ public interface SampleRepository {
   @SqlUpdate("<insert_all>")
   void insertFullBean(@BindBean SampleEntity dto);
 
+  @SqlUpdate("""
+        INSERT INTO sample_table (column_one, column_two, column_three, json_data)
+        VALUES (:columnOne, :columnTwo, :columnThree, :columnMap)
+    """)
+  void manualInsert(@BindBean SampleEntity dto);
+
   @DynamicSql
   @SqlUpdate("<sql>")
   void dynamicSql(@Define("sql") String sql, @BindMap Map<String, Object> params);

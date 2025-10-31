@@ -4,6 +4,9 @@ import io.github.askmeagain.jdbiplugin.common.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
+import org.jdbi.v3.json.Json;
+
+import java.util.Map;
 
 @Table("sample_table")
 @Getter
@@ -16,4 +19,8 @@ public class SampleEntity {
   private String columnTwo;
   @ColumnName("column_three")
   private String columnThree;
+
+  @Json
+  @ColumnName("json_data")
+  private Map<String, String> columnMap;
 }

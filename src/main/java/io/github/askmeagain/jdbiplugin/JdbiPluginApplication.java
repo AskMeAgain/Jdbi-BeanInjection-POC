@@ -1,10 +1,16 @@
 package io.github.askmeagain.jdbiplugin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.askmeagain.jdbiplugin.entity.SampleEntity;
 import io.github.askmeagain.jdbiplugin.repository.SampleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.jackson2.Jackson2Config;
+import org.jdbi.v3.jackson2.Jackson2Plugin;
+import org.jdbi.v3.json.JsonPlugin;
+import org.jdbi.v3.json.internal.JsonArgumentFactory;
+import org.jdbi.v3.postgres.PostgresPlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,33 +31,15 @@ public class JdbiPluginApplication {
 
   @Bean
   public Jdbi jdbi(DataSource dataSource) {
-    return Jdbi
+    var jdbi = Jdbi
       .create(dataSource)
-      .installPlugin(new SqlObjectPlugin());
+      .installPlugin(new SqlObjectPlugin())
+      .installPlugin(new Jackson2Plugin())
+      .installPlugin(new PostgresPlugin());
+
+    jdbi.getConfig(Jackson2Config.class).setMapper(new ObjectMapper());
+
+    return jdbi;
   }
 
-  @Component
-  @RequiredArgsConstructor
-  public static class SampleDataLoader implements CommandLineRunner {
-
-    private static final String INSERT_QUERY = "INSERT INTO sample_table (column_one, column_two, column_three) VALUES (:columnOne, :columnTwo, :columnThree)";
-    private final Jdbi jdbi;
-
-    @Override
-    public void run(String... args) {
-      var entity = new SampleEntity("value1", "value2", "value3");
-
-      jdbi.useExtension(SampleRepository.class, repository -> repository.insertFullBean(entity));
-
-      var queryParams = Map.<String, Object>of(
-        "columnOne", entity.getColumnOne(),
-        "columnTwo", entity.getColumnTwo(),
-        "columnThree", entity.getColumnThree()
-      );
-
-      jdbi.useExtension(SampleRepository.class, repository -> repository.dynamicSql(INSERT_QUERY, queryParams));
-
-      log.info("Inserted sample DTO into database using JDBI!");
-    }
-  }
 }
