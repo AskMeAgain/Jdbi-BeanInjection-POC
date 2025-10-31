@@ -32,9 +32,14 @@ public class SampleDataLoader implements CommandLineRunner {
       "columnMap", new ObjectMapper().writeValueAsString(Map.of("key", "value"))
     );
 
-    jdbi.useExtension(SampleRepository.class, repository -> repository.manualInsert(entity));
-    jdbi.useExtension(SampleRepository.class, repository -> repository.insertFullBean(entity));
-    jdbi.useExtension(SampleRepository.class, repository -> repository.dynamicSql(INSERT_QUERY, queryParams));
+    var repository = jdbi.onDemand(SampleRepository.class);
+
+    repository.manualInsert(entity);
+    repository.insertFullBean(entity);
+    repository.dynamicSql(INSERT_QUERY, queryParams);
+
+    repository.findById(17).ifPresent(x -> log.info("Found object: {}", x.getColumnMap().size()));
+    repository.findById(-123).ifPresent(x -> log.info("Found object: {}", x.getColumnMap().size()));
 
     log.info("Inserted sample DTO into database using JDBI!");
   }
