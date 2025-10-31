@@ -12,11 +12,10 @@ public class SampleChildReducer implements LinkedHashMapRowReducer<UUID, SampleE
 
   @Override
   public void accumulate(Map<UUID, SampleEntity> map, RowView rowView) {
-    var f = map.computeIfAbsent(rowView.getColumn("s_id", UUID.class),
-      id -> rowView.getRow(SampleEntity.class));
+    var parent = map.computeIfAbsent(rowView.getColumn("s_id", UUID.class), id -> rowView.getRow(SampleEntity.class));
 
     if (rowView.getColumn("c_id", UUID.class) != null) {
-      f.getChilds().add(rowView.getRow(ChildEntity.class));
+      parent.getChilds().add(rowView.getRow(ChildEntity.class));
     }
   }
 }

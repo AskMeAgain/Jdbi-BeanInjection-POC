@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.askmeagain.jdbiplugin.entity.ChildEntity;
 import io.github.askmeagain.jdbiplugin.entity.SampleEntity;
 import io.github.askmeagain.jdbiplugin.repository.SampleRepository;
+import io.github.askmeagain.jdbiplugin.utils.LogUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,6 @@ public class SampleDataLoader implements CommandLineRunner {
   private static final String SELECT_QUERY_PROJECTION = "SELECT column_one, json_data FROM sample_table WHERE id = :id AND column_one = :columnOne";
   private final Jdbi jdbi;
 
-  private static final ObjectMapper mapper = new ObjectMapper();
-
-  @SneakyThrows
-  private void logAsJson(Object obj) {
-    log.info("Found object: {}", mapper.writeValueAsString(obj));
-  }
-
   @SneakyThrows
   @Override
   public void run(String... args) {
@@ -50,6 +44,8 @@ public class SampleDataLoader implements CommandLineRunner {
       "columnMap", new ObjectMapper().writeValueAsString(Map.of("key", "value"))
     );
 
+    var dynamicSqlReadProjectionParams = Map.<String, Object>of("id", entity2.getId(), "columnOne", SampleEntity.SampleEnum.TEST);
+
     var repository = jdbi.onDemand(SampleRepository.class);
 
     //simple dynamic sql and insertion
@@ -65,20 +61,20 @@ public class SampleDataLoader implements CommandLineRunner {
     repository.insertFullBean(child2);
 
     //find single
-    repository.findById(entity3.getId()).ifPresent(this::logAsJson);
-    repository.findById(UUID.randomUUID()).ifPresent(this::logAsJson);
+    repository.findById(entity3.getId()).ifPresent(LogUtils::logAsJson);
+    repository.findById(UUID.randomUUID()).ifPresent(LogUtils::logAsJson);
 
     //dynamic sql with dynamic parameters
-    repository.dynamicSqlRead(SELECT_QUERY, Map.of("id", entity3.getId())).forEach(this::logAsJson);
+    repository.dynamicSqlRead(SELECT_QUERY, Map.of("id", entity3.getId())).forEach(LogUtils::logAsJson);
 
     //dynamic sql with projection
-    repository.dynamicSqlReadProjection(SELECT_QUERY_PROJECTION, Map.of("id", entity2.getId(), "columnOne", SampleEntity.SampleEnum.TEST)).forEach(this::logAsJson);
+    repository.dynamicSqlReadProjection(SELECT_QUERY_PROJECTION, dynamicSqlReadProjectionParams).forEach(LogUtils::logAsJson);
 
     //join via join row
-    repository.joinViaJoinRow().forEach(this::logAsJson);
+    repository.joinViaJoinRow().forEach(LogUtils::logAsJson);
 
     //join via reducer
-    repository.joinViaReducer().forEach(this::logAsJson);
+    repository.joinViaReducer().forEach(LogUtils::logAsJson);
 
     log.info("Everything worked!");
   }

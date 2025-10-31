@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class InsertAllSqlStatementCustomizer implements SqlStatementCustomizerFactory {
 
-  private final ConcurrentMap<Method, String> methodCache = new ConcurrentHashMap<>();
   private final ConcurrentMap<Class<?>, String> beanCache = new ConcurrentHashMap<>();
 
   @Override
@@ -27,7 +26,7 @@ public class InsertAllSqlStatementCustomizer implements SqlStatementCustomizerFa
         if (param.isAnnotationPresent(org.jdbi.v3.sqlobject.customizer.BindBean.class)) {
           var beanClass = param.getType();
 
-          var insertSql = methodCache.computeIfAbsent(method, m -> beanCache.computeIfAbsent(beanClass, this::generateInsertSql));
+          var insertSql = beanCache.computeIfAbsent(beanClass, this::generateInsertSql);
 
           stmt.define("insert_all", insertSql);
           break;

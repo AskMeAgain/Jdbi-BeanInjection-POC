@@ -2,9 +2,7 @@ package io.github.askmeagain.jdbiplugin.entity;
 
 import io.github.askmeagain.jdbiplugin.common.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.util.UUID;
