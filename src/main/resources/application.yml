@@ -1,1 +1,10 @@
-spring.application.name=JdbiPlugin
+spring:
+  application:
+    name: JdbiPlugin
+  flyway:
+    enabled: true
+    locations: classpath:db
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: user
+    password: password

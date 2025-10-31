@@ -1,4 +1,4 @@
-package io.github.askmeagain.jdbiplugin;
+package io.github.askmeagain.jdbiplugin.common;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

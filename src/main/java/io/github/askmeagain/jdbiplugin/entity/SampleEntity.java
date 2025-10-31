@@ -1,5 +1,6 @@
-package io.github.askmeagain.jdbiplugin;
+package io.github.askmeagain.jdbiplugin.entity;
 
+import io.github.askmeagain.jdbiplugin.common.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
@@ -7,7 +8,7 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName;
 @Table("sample_table")
 @Getter
 @AllArgsConstructor
-public class SampleDTO {
+public class SampleEntity {
 
   @ColumnName("column_one")
   private String columnOne;

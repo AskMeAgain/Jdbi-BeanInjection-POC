@@ -1,5 +1,6 @@
-package io.github.askmeagain.jdbiplugin;
+package io.github.askmeagain.jdbiplugin.customizer;
 
+import io.github.askmeagain.jdbiplugin.common.Table;
 import lombok.SneakyThrows;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 import org.jdbi.v3.sqlobject.customizer.SqlStatementCustomizer;
