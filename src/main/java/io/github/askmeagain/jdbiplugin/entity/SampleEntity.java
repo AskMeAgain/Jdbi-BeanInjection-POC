@@ -17,7 +17,7 @@ public class SampleEntity {
   @ColumnName("id")
   private UUID id;
   @ColumnName("column_one")
-  private String columnOne;
+  private SampleEnum columnOne;
   @ColumnName("column_two")
   private String columnTwo;
   @ColumnName("column_three")
@@ -28,4 +28,8 @@ public class SampleEntity {
   private Map<String, String> columnMap;
 
   private final List<ChildEntity> childs = new ArrayList<>();
+
+  public enum SampleEnum {
+    TEST, ANOTHER_TEST
+  }
 }

@@ -21,7 +21,7 @@ public class SampleDataLoader implements CommandLineRunner {
 
   private static final String INSERT_QUERY = "INSERT INTO sample_table (id, column_one, column_two, column_three, json_data) VALUES (:id, :columnOne, :columnTwo, :columnThree, cast(:columnMap as jsonb))";
   private static final String SELECT_QUERY = "SELECT * FROM sample_table WHERE id = :id";
-  private static final String SELECT_QUERY_PROJECTION = "SELECT column_one, json_data FROM sample_table WHERE id = :id";
+  private static final String SELECT_QUERY_PROJECTION = "SELECT column_one, json_data FROM sample_table WHERE id = :id AND column_one = :columnOne";
   private final Jdbi jdbi;
 
   private static final ObjectMapper mapper = new ObjectMapper();
@@ -34,10 +34,10 @@ public class SampleDataLoader implements CommandLineRunner {
   @SneakyThrows
   @Override
   public void run(String... args) {
-    var entity1 = new SampleEntity(UUID.randomUUID(), "value1", "value2", "value3", Map.of("key", "value"));
-    var entity2 = new SampleEntity(UUID.randomUUID(), "value1", "value2", "value3", Map.of("key", "value"));
-    var entity3 = new SampleEntity(UUID.randomUUID(), "value1", "value2", "value3", Map.of("key", "value"));
-    var entity4 = new SampleEntity(UUID.randomUUID(), "value1", "value2", "value3", Map.of("key", "value"));
+    var entity1 = new SampleEntity(UUID.randomUUID(), SampleEntity.SampleEnum.ANOTHER_TEST, "value2", "value3", Map.of("key", "value"));
+    var entity2 = new SampleEntity(UUID.randomUUID(), SampleEntity.SampleEnum.TEST, "value2", "value3", Map.of("key", "value"));
+    var entity3 = new SampleEntity(UUID.randomUUID(), SampleEntity.SampleEnum.ANOTHER_TEST, "value2", "value3", Map.of("key", "value"));
+    var entity4 = new SampleEntity(UUID.randomUUID(), SampleEntity.SampleEnum.TEST, "value2", "value3", Map.of("key", "value"));
 
     var child1 = new ChildEntity(UUID.randomUUID(), entity1.getId(), "value2");
     var child2 = new ChildEntity(UUID.randomUUID(), entity2.getId(), "value2");
@@ -72,7 +72,7 @@ public class SampleDataLoader implements CommandLineRunner {
     repository.dynamicSqlRead(SELECT_QUERY, Map.of("id", entity3.getId())).forEach(this::logAsJson);
 
     //dynamic sql with projection
-    repository.dynamicSqlReadProjection(SELECT_QUERY_PROJECTION, Map.of("id", entity2.getId())).forEach(this::logAsJson);
+    repository.dynamicSqlReadProjection(SELECT_QUERY_PROJECTION, Map.of("id", entity2.getId(), "columnOne", SampleEntity.SampleEnum.TEST)).forEach(this::logAsJson);
 
     //join via join row
     repository.joinViaJoinRow().forEach(this::logAsJson);
