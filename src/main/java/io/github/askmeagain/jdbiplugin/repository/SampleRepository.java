@@ -1,6 +1,7 @@
 package io.github.askmeagain.jdbiplugin.repository;
 
 import io.github.askmeagain.jdbiplugin.common.InsertBean;
+import io.github.askmeagain.jdbiplugin.common.UpdateBean;
 import io.github.askmeagain.jdbiplugin.entity.ChildEntity;
 import io.github.askmeagain.jdbiplugin.entity.ProjectionDto;
 import io.github.askmeagain.jdbiplugin.entity.SampleEntity;
@@ -29,6 +30,10 @@ public interface SampleRepository {
   @InsertBean
   @SqlUpdate("<insert_all>")
   void insertFullBean(@BindBean SampleEntity dto);
+
+  @UpdateBean
+  @SqlUpdate("<update_all>")
+  void updateFullBean(@BindBean SampleEntity dto);
 
   @InsertBean
   @SqlUpdate("<insert_all>")

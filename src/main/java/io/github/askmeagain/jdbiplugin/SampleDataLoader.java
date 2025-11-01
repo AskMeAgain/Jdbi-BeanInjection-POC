@@ -32,6 +32,7 @@ public class SampleDataLoader implements CommandLineRunner {
     var entity2 = new SampleEntity(UUID.randomUUID(), SampleEntity.SampleEnum.TEST, "value2", "value3", Map.of("key", "value"));
     var entity3 = new SampleEntity(UUID.randomUUID(), SampleEntity.SampleEnum.ANOTHER_TEST, "value2", "value3", Map.of("key", "value"));
     var entity4 = new SampleEntity(UUID.randomUUID(), SampleEntity.SampleEnum.TEST, "value2", "value3", Map.of("key", "value"));
+    var entity4Updated = new SampleEntity(entity4.getId(), SampleEntity.SampleEnum.ANOTHER_TEST, "updated", "updated", Map.of("key", "updated"));
 
     var child1 = new ChildEntity(UUID.randomUUID(), entity1.getId(), "value2");
     var child2 = new ChildEntity(UUID.randomUUID(), entity2.getId(), "value2");
@@ -59,6 +60,9 @@ public class SampleDataLoader implements CommandLineRunner {
     repository.insertFullBean(entity4);
     repository.insertFullBean(child1);
     repository.insertFullBean(child2);
+
+    //update
+    repository.updateFullBean(entity4Updated);
 
     //find single
     repository.findById(entity3.getId()).ifPresent(LogUtils::logAsJson);
