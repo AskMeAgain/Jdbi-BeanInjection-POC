@@ -17,11 +17,11 @@ public class SampleEntity {
   @ColumnName("id")
   private UUID id;
   @ColumnName("column_one")
-  private SampleEnum columnOne;
+  private List<SampleEnum> columnOne;
   @ColumnName("column_two")
   private String columnTwo;
   @ColumnName("column_three")
-  private String columnThree;
+  private TestId columnThree;
 
   @Json
   @ColumnName("json_data")

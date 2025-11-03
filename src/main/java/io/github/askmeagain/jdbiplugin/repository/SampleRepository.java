@@ -7,6 +7,8 @@ import io.github.askmeagain.jdbiplugin.entity.ProjectionDto;
 import io.github.askmeagain.jdbiplugin.entity.SampleEntity;
 import io.github.askmeagain.jdbiplugin.reducer.SampleChildReducer;
 import org.jdbi.v3.core.mapper.JoinRow;
+import org.jdbi.v3.spring.JdbiRepository;
+import org.jdbi.v3.sqlobject.GenerateSqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterConstructorMapper;
 import org.jdbi.v3.sqlobject.config.RegisterJoinRowMapper;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -19,6 +21,8 @@ import org.jdbi.v3.sqlobject.statement.UseRowReducer;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@GenerateSqlObject
+@JdbiRepository
 @RegisterConstructorMapper(ProjectionDto.class)
 @RegisterConstructorMapper(value = SampleEntity.class)
 @RegisterConstructorMapper(value = ChildEntity.class)
@@ -93,6 +97,9 @@ public interface SampleRepository {
       .map(Map.Entry::getKey)
       .toList();
   }
+
+  @SqlQuery("SELECT txid_current()")
+  long getCurrentTxId();
 
   @SqlQuery("<sql>")
   List<ProjectionDto> dynamicSqlReadProjection(@Define("sql") String sql, @BindMap Map<String, Object> params);
